@@ -1,0 +1,179 @@
+% Common definitions for this book.
+
+% for justified text
+\newcommand*\justify{%
+  \fontdimen2\font=0.4em% interword space
+  \fontdimen3\font=0.2em% interword stretch
+  \fontdimen4\font=0.1em% interword shrink
+  \fontdimen7\font=0.1em% extra space
+  \hyphenchar\font=`\-% allowing hyphenation
+}
+
+% Blocks of code and variables
+\newcommand{\code}[1]{{\fontfamily{\ttdefault}\selectfont\small #1}}
+
+% Math symbols.
+% reals
+\newcommand{\reals}{\ensuremath{\mathbb{R}} }
+\newcommand{\rr}{\mathbb{R}}
+% integers
+\newcommand{\ints}{\ensuremath{\mathbb{Z}} }
+\newcommand{\ii}{\mathbb{Z}}
+\newcommand{\zz}{\mathbb{Z}}
+% natural numbers
+\newcommand{\nats}{\ensuremath{\mathbb{N}} }
+\newcommand{\nn}{\mathbb{N}}
+% complex
+\newcommand{\complex}{\ensuremath{\mathbb{C}} }
+
+% Colors.
+\definecolor{fixmeColor}{rgb}{1.0,0.2,0.2}
+\definecolor{solutionColor}{rgb}{1.0,0.9,0.9}
+
+%--------------------------------------------
+% Temporary annotations in the text.
+\ifthenelse{\boolean{DRAFT}}{
+\newcommand{\fixme}[1]{\textbf{\textcolor{fixmeColor}{(FIXME: #1)}}}
+}{
+\newcommand{\fixme}[1]{}
+}
+
+%--------------------------------------------------------------------------
+% Solutions and nosolutions environment
+% Allow the @ character to be part of a name
+%--------------------------------------------------------------------------
+% Solutions and nosolutions environment
+% Allow the @ character to be part of a name
+\makeatletter
+\ifthenelse{\boolean{SOLUTIONS}}{
+    \newenvironment{solution}{%
+        \vspace{0.5\baselineskip}
+        \begin{tcolorbox}[breakable,enhanced,colback=pink]
+        \textbf{Solution:}
+    } {
+        \end{tcolorbox}
+        \vspace{0.5\baselineskip}
+    } % end newenvironment
+} { % ifthenelse separator
+% Alternative when there are no solutions.
+    \newenvironment{solution}{%
+        % Collect data into a box and then don't use it.
+        \begin{lrbox}{\@tempboxa}
+        \begin{minipage}[h] {\linewidth}
+        ~\hfill
+    }{ % newenvironment separator
+        \end{minipage}
+        \end{lrbox}
+    } % end newenvironment
+} % end ifthenelse
+% restore the @ character to special status
+\makeatother
+
+%--------------------------------------------------------------------------
+% Figure captions.
+\newcommand{\figcaption}[1]{\small\caption{#1}}
+
+%--------------------------------------------------------------------------
+% Define a term, print it in the text, and add to the index
+% Usage:
+%   \definition{term}
+%   \Definition{term}   for the term to appear with first letter in uppercase
+%   \acronym{index entry}{acronym}
+%
+% Link to a term and index the reference
+% Usage:
+%   \definitionlink{term}
+%   \Definitionlink{term}   for the link to appear with first letter in uppercase
+%   \definitionlink{acronym}
+%
+%   Add a noindex to definitionlink commands to skip adding the reference to the index
+\newcommand{\definition}[1]{\textbf{#1}\label{defn:#1}\index{#1|textbf}}
+\newcommand{\Definition}[1]{\textbf{\makefirstuc{#1}}\label{defn:#1}\index{#1|textbf}}
+\newcommand{\acronym}[2]{\textbf{#1} (\definition{#2})\index{#1|see{#2}}}
+\newcommand{\definitionlink}[1]{\hyperref[defn:#1]{#1}\index{#1}}
+\newcommand{\definitionlinknoindex}[1]{\hyperref[defn:#1]{#1}}
+\newcommand{\Definitionlink}[1]{\hyperref[defn:#1]{\makefirstuc{#1}}\index{#1}}
+\newcommand{\Definitionlinknoindex}[1]{\hyperref[defn:#1]{\makefirstuc{#1}}}
+% For terms being indexed. Just do \pointer{index term}.
+% Puts them in standard font face and creates an index entry.
+%   arg: The term being defined.
+% \newcommand{\pointer}[1]{#1\index{#1}}
+\newcommand{\pointer}[1]{#1\index{#1}}
+\newcommand{\Pointer}[1]{\makefirstuc{#1}\index{#1}}
+
+% Automatic formatting of code listings
+\definecolor{bluekeywords}{rgb}{0.13,0.13,1}
+\definecolor{greencomments}{rgb}{0,0.5,0}
+\definecolor{redstrings}{rgb}{0.9,0,0}
+\lstset{language=C,
+showspaces=false,
+showtabs=false,
+breaklines=true,
+numbers=none,
+showstringspaces=false,
+breakatwhitespace=true,
+escapeinside={(*@}{@*)},
+commentstyle=\color{greencomments},
+keywordstyle=\color{bluekeywords},
+stringstyle=\color{redstrings},
+basicstyle=\ttfamily\footnotesize,
+frame=single
+}
+
+% norm operator
+\newcommand{\norm}[1]{\lVert#1\rVert}
+
+%registered symbol
+\newcommand{\reg}{\textregistered~}
+
+%trademark symbol
+\newcommand{\tm}{\texttrademark~}
+
+% for sequences instructing how to navigate software menus, e.g. "start -> all programs ->"
+% Usage: \menulist{File:New:Project}
+\newcommand{\menulist}[1]{\justify\StrSubstitute{#1}{:}{~$\!\!\rightarrow\!\!$~}[\dummy]{``\dummy''}}
+
+% for referring to parts of an application window or dialog
+\newcommand{\dialogbutton}[1]{\ovalbox{#1}}
+
+% for hints
+\newcommand{\hint}[1]{\textit{\textbf{Hint:} #1}}
+
+% tight centering for mid-paragraph center lines
+\newenvironment{tightcenter}{%
+  \setlength\topsep{0pt}
+  \setlength\parskip{0pt}
+  \begin{center}
+}{%
+  \end{center}
+}
+
+% to print a long path in small text, centered on its own line
+% use tabular environment to create non-paragraph-breaking line skips
+\newenvironment{longpath}{%
+    \begin{tightcenter}
+    \begin{tabular}{c}
+    ~\\
+    \small\justify
+} {%
+    \\
+    ~\\
+    \end{tabular}
+    \end{tightcenter}
+} % end newenvironment
+
+% Console command and environment
+% use tabular environment to create non-paragraph-breaking line skips
+\newcommand{\consoleinline}[1]{{\texttt{\justify~#1~}}}
+\newenvironment{console}{%
+    \begin{tightcenter}
+    \fontfamily{\ttdefault}\selectfont
+    \begin{tabular}{l}
+    ~\\
+%    \justify
+} {%
+    \\
+    ~\\
+    \end{tabular}
+    \end{tightcenter}
+} % end newenvironment

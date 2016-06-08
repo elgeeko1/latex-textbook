@@ -1,0 +1,140 @@
+% preamble
+
+% Indicate that PDF v1.6 or earlier may be included in figures
+\pdfoptionpdfminorversion 6
+
+% nag user if including deprecated packages
+\RequirePackage[l2tabu, orthodox]{nag}
+
+% iPad screen is 1024x768, 9.7 inch diagonal. Dimensions:
+% Width: 0.007578125*768=5.82
+% Height: 0.007578125*1024=7.76
+% Scale this up by 1.064 to get slightly smaller fonts.
+% Width: 6.19
+% Height: 8.25
+\usepackage[papersize={6.19in, 8.25in},top=0.6in,bottom=0.6in,left=0.4in,right=0.4in]{geometry}
+
+% MicroType package to improve "glue" and reduce hbox & vbox fill problems
+\usepackage{microtype}
+
+% Paragraph spacing and style
+\parskip        0.1in
+\parindent      0.0in
+
+% Packages
+\usepackage[margin=10pt,font=small,labelfont=bf]{caption}
+\usepackage{graphicx}
+% To get decent pdf files:
+\usepackage{mathptmx} % Use Times as default text font, and provide maths support
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor} % for color names
+\usepackage{boxedminipage}
+% To have floating figures
+\usepackage{floatflt}
+% To have subfigures
+\usepackage{subfigure}
+% To span rows in a table:
+\usepackage{multirow}
+% To allow paragraphs aligned at the bottom in a table.
+\usepackage{array}
+% To get a decent bibliography:
+\usepackage{natbib}
+% To get section headings in helvetica.
+%   OT1: text font
+%   phv: Adobe Helvetica
+%   b: bold (alt: bc: bold condensed)
+%   n: normal (not italic (i) or small caps (sc) etc.)
+\usepackage{sectsty}
+\allsectionsfont{\usefont{OT1}{phv}{b}{n}\selectfont}
+% To get fancy chapter headings (must be after sectsty package)
+\usepackage[Bjornstrup]{fncychap}
+\ChTitleVar{\raggedleft\Huge\bfseries}
+% frames for solutions environment
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\tcbuselibrary{skins}
+% For more compact table of contents.
+% NOTE: setspace package conflicts with hyperref and causes footnotes
+% to hyperlink to page i, for some strange reason. Putting it before hyperref
+% seems to solve the problem.
+\usepackage{setspace}
+% To penalize widows
+\widowpenalty=10000
+\clubpenalty=10000
+% Use the version package
+\usepackage{version}
+% For code listings
+\usepackage{listings}
+% for compact enumerations
+\usepackage{paralist}
+
+\usepackage{xstring}  % for \StrSubstitute, used for \menulist
+\usepackage{microtype} % better hyphenation and line breaking for \texttt \ttfamily
+\usepackage{fancybox}  % for enclosed ovalbox
+
+% For indexing
+\usepackage{makeidx}
+\makeindex
+
+\usepackage{algorithm,algorithmic}
+\usepackage[algo2e,lined,linesnumbered,algochapter]{algorithm2e}
+
+%fonts and encoding
+% use T1 encoding for special characters (pipes, backslashes, etc.)
+\usepackage[T1]{fontenc}
+% load symbol definitions
+\usepackage{textcomp} % for textregistered, texttrademark, etc.
+% make underscore a text character unless in math mode
+\catcode`_=12
+\begingroup\lccode`~=`_\lowercase{\endgroup\let~\sb}
+\mathcode`_="8000
+% for external link symbol
+\usepackage{MnSymbol}
+% for \dsliterary symbol for document links
+\usepackage{dictsym}
+% for \makefirstuc
+\usepackage{mfirstuc}
+
+% Hyperlinks
+\usepackage{hyperref}
+% To ensure that hyperlinks to figures, etc., show the entire figure when you go to them.
+% Note that this requires that every \begin{figure}...\end{figure} have a \caption.
+\usepackage[figure,table]{hypcap}
+% Add additional PDF metadata to PDF file by including this package
+\usepackage{hyperxmp}
+
+% To enable file writing
+\usepackage{catchfile}
+
+% Use for key pairings
+\usepackage{pgfkeys}
+
+% For getting the full page titlepage.
+\usepackage[absolute]{textpos}
+
+% allow inclusion of external PDF pages
+\usepackage{pdfpages}
+
+% Headers and footers
+\setlength{\headheight}{14pt}
+\usepackage{fancyhdr}
+% Bug in fancyhdr results in overfull hbox beyond margin (offset chapter number)
+% fix this here by kerning -10pt (the amount of overfill)
+\makeatletter
+  \renewcommand{\DOCH}{%
+    \settowidth{\py}{\CNoV\thechapter}%
+    \addtolength{\py}{-10pt}%     % Amount of space by which the
+%                                  % number is shifted right
+    \fboxsep=0pt%
+    \colorbox[gray]{.85}{\rule{0pt}{40pt}\parbox[b]{\textwidth}{\hfill}}%
+\kern-\myhi
+    \kern-\py\raise20pt%
+    \hbox{\color[gray]{.5}\CNoV\thechapter}%
+%\kern-\myhi
+\\%
+  }
+\makeatother

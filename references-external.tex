@@ -1,0 +1,108 @@
+% References that should open in a browser or in a new PDF viewer
+% are defined here. This includes external URLs or links to PDFs
+% that are distributed with this text.
+%
+% Citations for journals, conferences, etc., that are not distributed
+% with this text should be defined statically in References.bib.
+%
+% This TeX file creates a BiBTeX entry for a reference. Each BiBTeX
+% BiBTeX entry is associated to a URL or local PDF document. The
+% BiBTeX file is generated when this file is processed during TeX
+% build, so if you change this document you should first build,
+% then run BiBTeX (which inputs the newly generated .bib file), and
+% lastly run build again.
+%
+% Concisely: IF YOU CHANGE THIS DOCUMENT, then
+%            Build - BiBTeX - Build
+%
+% Use Case: Create a new BiBTeX entry and PDF link
+%   \newdocref[bibliography label][author][title][month][year][howpublished][url]
+% Requires:
+%   Corresponding PDF file \docpath/[bibliography label].pdf (colons ':' replaced by underscores '_')
+% Errors:
+%   If \docpath/[bibliography label].pdf (colons ':' replaced by underscores '_') does not exist,
+%   an error will be thrown.
+%
+% Use Case: Create a new BiBTeX entry and URL link
+%   \newlinkref[bibliography label][author][title][month][year][howpublished][url]
+%
+% Troubleshooting:
+%   + Any superfluous characters in this file will be printed on page 1 of the document
+%   + Any use of '=' character in a URL will cause truncation;
+%       use \urlEqual instead and use double brackets {{http://...}} around the URL
+
+% Workaround for having an equal sign in a URL (using '=' will truncate due to pdfkeys parsing)
+\newcommand{\urlEqual}{=}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Document References  %
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newdocref
+    {BluetoothSpecialInterestGroup:03:BluetoothHIDProfile}
+    {{Bluetooth Special Interest Group}}
+    {Bluetooth HID Profile}
+    {May}
+    {2003}
+    {v1.0}
+    {https://bluetooth.org/Technical/Specifications/adopted.htm}
+
+\newdocref
+    {Fisher:10:UsingAnAccelerometerForInclinationSensing}
+    {Christopher J. Fisher}
+    {Using an Accelerometer for Inclination Sensing}
+    {}
+    {2010}
+    {Analog Devices application note AN-1057 v0}
+    {http://analog.com/static/imported-files/application_notes/AN-1057.pdf}
+
+\newdocref
+    {Freescale:13:XtrinsicAccelerometer}
+    {{Freescale Semiconductor}}
+    {Xtrinsic MMA8452Q 3-Axis 12-bit/8-bit Digital Accelerometer}
+    {July}
+    {2013}
+    {document \#MMA8452Q}
+    {http://cache.freescale.com/files/sensors/doc/data_sheet/MMA8452Q.pdf}
+
+\newdocref
+    {Ozyagcilar:11:ImplementingCompass}
+    {Talat Ozyagcilar}
+    {Implementing a Tilt-Compensated eCompass using Accelerometer and Magnetometer Sensors}
+    {August}
+    {2011}
+    {Analog Devices application note AN-4248 v2}
+    {http://freescale.com/files/sensors/doc/app_note/AN4248.pdf}
+
+%%%%%%%%%%%%%%%%%%%%
+% Link References  %
+%%%%%%%%%%%%%%%%%%%%
+
+%   \newlinkref[bibliography label][author][title][month][year][howpublished][url]
+
+\newlinkref
+    {Nintendo:13:WiiMote}
+    {Nintendo}
+    {{Nintendo Controllers}}
+    {}
+    {2013}
+    {}
+    {http://nintendo.com/wii/console/controllers}
+
+\newlinkref
+    {wiki:Wii_Remote}
+    {Wikipedia}
+    {{Wii Remote}}
+    {}
+    {2013}
+    {}
+    {http://en.wikipedia.org/wiki/Wii_Remote}
+
+\newlinkref
+    {WiiBrew:12:WiiMote}
+    {WiiBrew}
+    {WiiMote}
+    {October}
+    {2012}
+    {}
+    {http://wiibrew.org/wiki/Wiimote}

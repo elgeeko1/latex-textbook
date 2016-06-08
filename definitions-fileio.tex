@@ -1,0 +1,21 @@
+% File writing commands
+
+% \appendwrite{filename}{content}
+\newwrite\appendwrite
+\newcommand\appendfile[2]{
+    \begingroup
+    \IfFileExists{#1}
+        {\CatchFileDef{\filecontent}{#1}{\endlinechar=`^^J\catcode\endlinechar=12\relax}}% keep existing end-of-lines
+        {\let\filecontent\empty}%
+    \createfile{#1}{\filecontent#2}
+    \endgroup
+}
+
+% create (overwrite) a new file
+% \createfile{filename}{content}
+\newwrite\createwrite
+\newcommand\createfile[2]{
+    \immediate\openout\createwrite=#1
+    \immediate\write\createwrite{#2}
+    \immediate\closeout\createwrite
+}

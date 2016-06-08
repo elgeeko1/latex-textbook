@@ -1,0 +1,166 @@
+% Top-level LaTeX file
+%
+% Book template authors: Jeff C. Jensen, Edward A. Lee, and Sanjit A. Seshia.
+% Derived from Lee & Seshia: Embedded Systems, A Cyber-Physical Systems Approach.
+%
+% Solutions mode is set by boolean parameters below.
+%
+% To build a PDF:
+%   make
+%
+% To clean:
+%   make clean
+
+\documentclass[pdftex,11pt,openany,oneside]{book}
+\input{book-preamble.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Files input or output by this document   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Filename of the .bib file to generate for external references; omit extension
+\newcommand{\referencesexternal}{references-external}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Release settings                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Version number of this release
+\newcommand\releaseversion{1.0}
+% Location of PDFs that should be distributed with this document
+\newcommand\docpath{file:documents}
+
+% Release settings: draft and solution.
+%
+%% To print solutions, set this value to true
+\newboolean{SOLUTIONS}
+\setboolean{SOLUTIONS}{true}
+%% To print FIXME messages, set this value to true
+\newboolean{DRAFT}
+\setboolean{DRAFT}{true}
+
+\title{Book Title}
+\author{First Author \and Second Author \and Third Author}
+
+% License statement and URL are used in the title page, as well as
+% the \hypersetup PDF options
+\newcommand\license{Copyright \copyright YYYY, AUTHORS. All rights reserved. This textbook and supplemental material are licensed under LICENSE (SHARING IS CARING!).}
+
+% Setup hyperlink appearance.
+\definecolor{linkColor}{rgb}{0.1,0.1,0.8}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkColor,
+    citecolor=linkColor,
+    urlcolor=linkColor,
+    filecolor=linkColor,
+    plainpages=false,
+    linktocpage=true,
+    breaklinks=true,
+    pdfnewwindow=true,
+    pdfpagemode=UseOutlines,
+    pdfcopyright=\license
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% Commands and environments
+\input{definitions-fileio.tex}
+\input{definitions-references.tex}
+\input{definitions.tex}
+\input{\referencesexternal.tex}
+
+% header and footer
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyhead[L]{\slshape \leftmark}
+\fancyfoot[R]{\thepage}
+\fancyfoot[L]{\slshape \rightmark}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[R]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+%%%%%%%%%%%%%%%
+% Front Matter
+%%%%%%%%%%%%%%%
+\frontmatter
+\includepdf[pages={1}]{book-cover.pdf}
+\input{book-title.tex}
+
+% Table of contents
+\clearpage
+\begin{spacing}{0.0}        % More compact table of contents
+\markboth{CONTENTS}{}
+\setcounter{tocdepth}{1}    % Normally, the depth of the TOC is 2, but this makes the TOC very long.
+\tableofcontents
+\end{spacing}
+\addtocontents{toc}{\vspace{-0.5in}}
+
+% preface
+\clearpage
+\input{chap-preface.tex}
+
+%%%%%%%%%%%%%%%
+% Main Matter
+%%%%%%%%%%%%%%%
+\clearpage
+% ahead there be dragons, this is the informational content of the book
+\mainmatter
+\input{chap-topic1.tex}
+\clearpage
+\input{chap-topic2.tex}
+
+% appendix
+\clearpage
+\appendix
+\input{chap-appendix.tex}
+
+%%%%%%%%%%%%%%%
+% Back Matter
+%%%%%%%%%%%%%%%
+\clearpage
+\backmatter
+
+\fancyfoot[L]{} % drop section footer
+
+% Bibliography
+% Use phantom section to ensure that the TOC bibliography goes to the right page:
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\fancyhead[L]{\slshape BIBLIOGRAPHY}
+\bibliographystyle{jponewurl}
+{\footnotesize
+\bibliography{references,\referencesexternal}
+}
+\vfill
+\clearpage
+
+% Detailed table of contents
+% Use phantom section to ensure that the TOC chapter link goes to the right page:
+%\fancyhead[L]{\slshape \leftmark}
+\phantomsection
+\addcontentsline{toc}{chapter}{Index}
+\fancyhead[L]{\slshape INDEX}
+{\footnotesize
+\printindex
+}
+\vfill
+
+% Final quote
+\clearpage
+\fancyhf{}
+\fancyfoot[R]{\thepage}
+\vspace*{\fill}
+\begin{center}
+\begin{quote}
+{\footnotesize Any final words?}
+\end{quote}
+\end{center}
+\vspace*{\fill}
+
+\end{document}
+
+% Let it be known that LaTeX is the damned worst language on Earth.

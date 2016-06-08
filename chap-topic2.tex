@@ -1,0 +1,218 @@
+\chapter{Topic 2}\label{chap:topic2}
+
+\section{Introduction}\label{sec:topic2}
+This topic includes figures and exercises.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          EXERCISES            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Topic 2 Exercises}\label{sec:topic2-exercises}
+A few example exercises. Note that solutions appear only if \textbackslash SOLUTIONS is set to true in book.tex.
+
+\begin{asparaenum}
+\item Why do grocery stores sell hot dogs in packs of 10 and hot dog buns in packs of 8?
+
+    \begin{solution}
+        It's a conspiracy.
+    \end{solution}
+
+\item Let $\vec{a}_g=(a_{g_x},a_{g_y},a_{g_z})$ be the specific force of gravity as measured by an accelerometer on a mobile robot. You may assume the accelerometer has been calibrated and is in units of g.
+    \begin{compactenum}
+    \item Find $\vec{a}_g$ when the robot is on level ground. Verify $\norm{\vec{a}_g}=1g$.
+        \begin{solution}
+        \begin{equation*}
+        \vec{a}_g = 1g\begin{bmatrix}
+            0 \\
+            0 \\
+            1
+            \end{bmatrix}
+        \end{equation*}
+
+        \begin{equation*}
+        \begin{aligned}
+        \norm{\vec{a}_g}&=1g\sqrt{0^2+0^2+1^2} \\
+        &=1g
+        \end{aligned}
+        \end{equation*}
+        \end{solution}
+
+    \item The robot is placed on a hill with inclination $\theta_\text{I}\in\left[0,\tfrac{\pi}{2}\right]$ in radians. Find $\vec{a}_g$ when the robot is oriented directly uphill. Verify $\norm{\vec{a}_g}=1g$.
+        \begin{solution}
+        \begin{equation*}
+        \vec{a}_g=1g
+            \begin{bmatrix}
+            \sin(\theta_\text{I}) \\
+            0 \\
+            \cos(\theta_\text{I})
+            \end{bmatrix}
+        \end{equation*}
+
+        \begin{equation*}
+        \begin{aligned}
+        \norm{\vec{a}_g}&= 1g\sqrt{\sin^2(\theta_\text{I})+0^2+\cos^2(\theta_\text{I})}
+        \\ &= 1g
+        \end{aligned}
+        \end{equation*}
+        \end{solution}
+
+    \item The robot is placed on a hill with inclination $\theta_\text{I}\in\left[0,\tfrac{\pi}{2}\right]$ in radians. Find $\vec{a}_g$ when the robot is rotated $\theta$ radians clockwise from uphill orientation. Verify $\norm{\vec{a}_g}=1g$.
+        \begin{solution}
+        \begin{equation*}
+        \vec{a}_g=1g\begin{bmatrix}
+            \sin(\theta_\text{I})\cos(\theta) \\
+            \sin(\theta_\text{I})\sin(\theta) \\
+            \cos(\theta_\text{I})
+            \end{bmatrix}
+        \end{equation*}
+
+        \begin{equation*}
+        \begin{aligned}
+        \norm{\vec{a}_g}&=1g\sqrt{\sin^2(\theta_\text{I})\cos^2(\theta)+\sin^2(\theta_\text{I})\sin^2(\theta)+\cos^2(\theta_\text{I})} \\ &= 1g\sqrt{\sin^2(\theta_\text{I})\left[\cos^2(\theta)+\sin^2(\theta)\right]+\cos^2(\theta_\text{I})} \\ &= 1g\sqrt{\sin^2(\theta_\text{I})+\cos^2(\theta_\text{I})} \\ &= 1g
+        \end{aligned}
+        \end{equation*}
+        \end{solution}
+    \end{compactenum}
+\end{asparaenum}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     WiiMote                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introducing the WiiMote}\label{sec:topic2-wiimote}
+This section shows various types of references, including references within this document, to an external website, and to an exernal PDF (remote or on disk).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          PRELAB READING             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Prelab Reading}
+\begin{compactitem}
+\item \secref{sec:topic2-wiimote}
+\item \linkref{wiki:Wii_Remote}
+\item \linkref{WiiBrew:12:WiiMote}
+\item \docref{BluetoothSpecialInterestGroup:03:BluetoothHIDProfile}
+    \begin{compactitem}
+        \item \docpageref{BluetoothSpecialInterestGroup:03:BluetoothHIDProfile}{18}{\S ``Introduction to the HID Protocol''}, p. 18-23
+        \item \docpageref{BluetoothSpecialInterestGroup:03:BluetoothHIDProfile}{57}{\S ``BT HID Transaction Header''}, p. 57-64
+    \end{compactitem}
+\item \docref{Fisher:10:UsingAnAccelerometerForInclinationSensing}
+\item \docref{Ozyagcilar:11:ImplementingCompass}
+\end{compactitem}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%          LAB PROCEDURE              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Lab Exercises}
+This is an example of laboratory exercises using a Nintendo WiiMote.
+
+Required equipment:
+\begin{compactitem}
+\item Nintendo Wii Remote
+\end{compactitem}
+
+\begin{asparaenum}
+\item \textbf{Plot the uncalibrated accelerometer signal from the WiiMote:} after pairing, open and run \consoleinline{WiiMote Interface.exe}.
+
+    \begin{compactenum}
+    \item What are the values of the x and y axes when the WiiMote is at rest on level ground?
+        \begin{solution}
+        This will vary from device to device, and the grade on which the WiiMote rests, but 0g should produce output around 128 ADC units.
+        \end{solution}
+
+    \item What is the value of the z axis when the WiiMote is at rest on level ground? What quantity is being measured?
+        \begin{solution}
+        This will vary from device to device. At rest the z axis should produce output around 155 ADC units. This is a measurement of gravity, 1g.
+        \end{solution}
+    \end{compactenum}
+
+\item \textbf{Measure sensitivity and bias of the accelerometer:} Using the signal plots, determine the sensitivity and bias of the sensor.
+
+    \hint{Will it help to measure one of these quantities first before measuring the second?}
+
+    \begin{compactenum}
+    \item What bias did you record?
+        \begin{solution}
+        The bias of the accelerometer is typically around 128 ADC units.
+        \end{solution}
+
+    \item What sensitivity did you record?
+        \begin{solution}
+        The sensitivity of the WiiMote accelerometer is typically around 25 ADC units per g. A common mistake is to measure sensitivity without compensating for the bias, which produces an (incorrect) sensitivity around 25 + 128 ADC units. The accelerometer will not properly scale to $\pm 1g$ if this error is made.
+        \end{solution}
+    \end{compactenum}
+
+    \item Provide the relevant MATLAB code and screenshots of changes (if any) to the block diagram.
+        \begin{solution}
+        The MATLAB code that performs the above calibration equation follows.
+
+\begin{lstlisting}[language=matlab]
+% calibrate to units of g-forces (g)
+acceleration = (sensor - bias) ./ sensivity;
+
+% magnitude (in g)
+mag = norm(acceleration);
+\end{lstlisting}
+        \end{solution}
+
+\item \textbf{Measure Pitch and Roll:} Measure the pitch and roll of the WiiMote.
+
+    \begin{compactenum}
+    \item What equations did you use to calculate pitch and roll?
+        \begin{solution}
+        The solution follows from \cite{Ozyagcilar:11:ImplementingCompass}, Eqn. 13 and Eqn. 15, where $G_{px}$ and $G_{py}$ are swapped. Given acceleration $\vec{s}=(s_x,s_y,s_z)\in\reals^3$,
+        \begin{equation*}
+        \begin{aligned}
+        \text{roll}\triangleq\phi&=\tan^{-1}\left(\frac{s_x}{s_z}\right) \\
+        \text{pitch}\triangleq\theta&=\tan^{-1}\left(\frac{-s_y}{s_x\sin(\phi)+s_z\cos(\phi)}\right)
+        \end{aligned}
+        \end{equation*}
+        \end{solution}
+    \end{compactenum}
+\end{asparaenum}
+
+
+
+\section{Figures}\label{sec:topic2-figures}
+Here is the logo for the \pointer{GNU} project.
+
+%fig:gnu
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.25\linewidth]{fig/gnu.png}
+\figcaption{GNU logo~\cite[]{Suvasa:11:gnulogo}.\label{fig:gnu}}
+\end{figure}
+
+
+\section{Other Useful Definitions}
+For inline code, such as \code{[]->int\{return 42;\}} use \textbackslash code .
+
+For long file paths, such as
+    \begin{longpath}
+    /usr/bin/which
+    \end{longpath}
+use the \code{longpath} environment.
+
+For a textual representation of a button, use \textbackslash dialogbutton . \dialogbutton{OK}
+
+If you need to fix something in a future version, use \textbackslash fixme. It will show up if \textbackslash DRAFT is set to true in the preamble, and will be hidden otherwise. \fixme{Remind folks that this feature will change layout when text is hidden or shown.}
+
+For a sequence of steps, such as navigating multiple menu levels, use \textbackslash menulist with items separated by colons:
+\menulist{File:Import:Document}
+
+For entering commands in a console, use \textbackslash consoleinline or the console environment.
+\begin{console}
+cd\\
+sudo apt-get update\\
+sudo apt-get upgrade\\
+\end{console}
+
+
+For code sections, use \textbackslash lstlisting. Default settings are set in the preable.
+\begin{lstlisting}
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    printf("Hello, world!\n");
+    return 0;
+}\end{lstlisting}

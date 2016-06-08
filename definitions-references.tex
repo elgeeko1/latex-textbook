@@ -1,0 +1,260 @@
+%%%%%%%%%%%%%%%%%%%%%%%
+% References          %
+%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This document enables efficient and consistent management of references, citations,
+% external URLs, and PDF documents distributed with this text.
+%
+% Some commands create BiBTeX entries and associate them to file paths or URLs. The
+% bibliography label, BiBTeX entry, and PDF filename or URL are defined in a single
+% command and referenced similarly. This addresses the problem of connecting BiBTeX,
+% PDFs, and URLs when printing a citation. Without this framework, each citation
+% requires a hard-coded link to a PDF document or a URL and must be followed by the
+% corresponding BiBTeX citation. For example, consider:
+%
+%    \link{doc.pdf}{Doc Title}~\cite[]{Authors:Year:Title}
+%
+% If a PDF is updated to a new version, or a URL changes, or the year is updated,
+% then every instance of the PDF link and BiBTeX label reference must be changed, and
+% the PDF must be in the correct location in the filesystem. This is too complex a
+% way to manage dozens of such references.
+%
+% For references into external PDFs distributed with this document, one command
+% creates a BiBTeX entry, verifies the document exists in the distribution, and
+% associates the citation with a file path. A complementary citation command
+% prints a text citation with the appropriate link to the PDF file and link to the
+% bibliography entry.
+%
+% For references into external URLs, one command creates a BiBTeX entry and associates
+% the citation with a URL. A complementary citation command prints a text vitation
+% with the appropriate URL link and link to the bibliography entry.
+%
+% Use Case:
+%   Internal (this document) references
+% Syntax:
+%   \chapref{label}                                   for Chapter 1: ChapTitle
+%   \secref{label}                                    for S1.2.3 (SecTitle)
+%   \sideref{label}{sidetitle}                        for 'sidetitle' sidebar p.{label}
+%   \exref{label1,...}                                for Ex. #1,...
+%   \chapsecref{chaplabel}{seclabel}                  for Chapter 1: ChapTitle, S1.2.3 (SecTitle)
+%   \chapsideref{chaplabel}{sidebarlabel}{sidetitle}  for Chapter 1: ChapTitle, ``SideTitle'' sidebar p.1
+%   \chapexref{chaplabel}{exlabel1,...}               for Chapter 1: ChapTitle, Ex. #1,...
+%   \chapsecexref{chaplabel}{seclabel}{exlabel1,...}  for Chapter 1: ChapTitle, S1.2.3 Ex #1,...
+%   \labref{label}                                    for Lab 1: LabTitle
+% Examples:
+%   Refer to \secref{lab:eclipseTroubleshooting} for troubleshooting Eclipse.
+%   This lab builds on \labref{lab:ProgramMicroBlazeXilinx}.
+%
+% Use Case:
+%   Generate a new BiBTeX entry that references a PDF distributed with the text.
+% Syntax:
+%   \newdocref[bibliography label][author][title][month][year][howpublished][url]
+% Example:
+%   \newdocref{iRobot:06:CreateOwnersGuide}       % Bibliography label
+%       {iRobot}                                             % Author
+%       {Create Owner's Guide}                               % Title
+%       {}                                                   % Month (unknown)
+%       {2006}                                               % Year
+%       {v430.06}                                            % How published (i.e. version no.)
+%       {http://irobot.com/filelibrary/create/Create\%20Manual_Final.pdf}         % URL
+% Requires:
+%   iRobot_06_CreateOwnersGuide.pdf exists in documents folder on build machine
+%
+% Use Case:
+%   Generate a new BiBTeX entry that references an external URL.
+% Syntax:
+%   \newlinkref[bibliography label][author][title][month][year][howpublished][url]
+% Example:
+%   \newlinkref{NationalInstruments:13:LabVIEWwebsite}     % Bibliography label
+%       {{National Instruments}}                                 % Author
+%       {LabVIEW product page}                                   % Title
+%       {August}                                                 % Month
+%       {2013}                                                   % Year
+%       {}                                                       % How published (i.e. version no.)
+%       {http://ni.com/LabVIEW}                                  % URL
+%
+% Use Case:
+%   Reference a PDF document.
+% Syntax:
+%   \docref{bibliography label}
+%   \docpageref{bibliography label}{page}{text}
+% Example:
+%   See \docref{iRobot:06:CreateOwnersGuide} for more details on the robot.
+%   See \docpageref{iRobot:06:CreateOwnersGuide}{4}{OI Commands} to see more on OI commands.
+%
+% Use Case:
+%   Reference an external URL.
+% Syntax:
+%   \linkref{bibliography label}
+% Example:
+%   See \linkref{WiiBrew:12:WiiMote} for the latest deconstruction of the WiiMote.
+%
+
+% Filename of the .bib file to generate for external references
+%   define this in the main LaTeX file
+\providecommand{\externalbibfile}{references-external}
+
+% Key pair settings for associating citations with PDFs and URLS
+\newcommand{\setvalue}[1]{\pgfkeys{/variables, #1}}
+\newcommand{\getvalue}[1]{\pgfkeysvalueof{/variables/#1}}
+\newcommand{\declare}[1]{
+    \pgfkeys{
+        /variables/#1.is family,
+        /variables/#1.unknown/.style = {\pgfkeyscurrentpath/\pgfkeyscurrentname/.initial = ##1}
+    }
+}
+\declare{}  % Create the variables key
+
+% \newlinkref[bibliography label][author][title][month][year][howpublished][url]
+%
+% Use this command to ensure consistency between citation names, URLS, and and how
+% the citations appear in the text.
+%
+% This command creates a BiBTeX citation whose content may be referenced using this label
+\newboolean{ExternalBibFileCreated} % bibliography file has been created?
+\setboolean{ExternalBibFileCreated}{false}
+\newcommand\newlinkref[7]{
+    % append bibliography entry
+    \ifthenelse{\boolean{ExternalBibFileCreated}}{}{
+        \createfile{\externalbibfile .bib}{This file is automatically generated by LaTeX. Do not modify.}
+        \setboolean{ExternalBibFileCreated}{true}
+    }
+    \appendfile{\externalbibfile .bib}{%
+        @misc{
+            #1,
+            Author = {#2},
+            Title = {{#3}},
+            Month = {#4},
+            Year = {#5},
+            Howpublished = {#6},
+            URL = {#7}
+        }
+    }
+
+    % set variables
+    \declare{#1/}
+    \setvalue{#1/author = #2}
+    \setvalue{#1/title = #3}
+    \setvalue{#1/month = #4}
+    \setvalue{#1/year = #5}
+    \setvalue{#1/howpublished = #6}
+    \setvalue{#1/url = #7}
+}
+
+% \newdocref[bibliography label][author][title][month][year][howpublished][url]
+%
+% Use this command to ensure consistency between citation names, PDFs, URLS, and and how
+% the citations appear in the text.
+%
+% This command creates a BiBTeX citation whose content may be referenced using this label,
+% and verifies that the PDF file is located in the filesystem. This command assumes that,
+% for a bibliography label Author:Year:Title, that Author_Year_Title.pdf exists in the
+% documents folder. If the file does not exist, an error is generated. If the file exists,
+% the filename is written to a dependency log to use for building a release.
+\newboolean{ReleaseDependenciesLogCreated} % dependencies log has been created?
+\setboolean{ReleaseDependenciesLogCreated}{false}
+\newcommand\newdocref[7]{
+    % create the PDF filename from the bibliography index
+    \StrSubstitute{#1}{:}{_}[\citationfilename]
+
+    % verify the PDF file exists
+    \IfFileExists{documents/\citationfilename.pdf}{}{\errmessage{Unable to locate reference  \citationfilename.pdf}}
+
+    % Create the reference key
+    \newlinkref{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+}
+
+%
+% Reference string formatting
+%
+
+% \chapstring{no}{chaptitle}   for Chapter 1: ChapTitle
+% \secstring{no}{sectitle}     for S1.2.3 (SecTitle)
+% \pagestring{page}            for p.
+% \sidestring{page}{sidetitle} for ``SideTitle'' sidebar p.123
+% \exstring{ex1,ex2,...}       for Ex #1,2,...
+% \chapsecstring{chapno}{chaptitle}{secno}{sectitle}
+% \chapsidestring{chapno}{chaptitle}{pageno}{sidetitle}
+% \chapexstring{chapno}{chaptitle}{ex1,ex2,...}
+% \chapsecexstring{chapno}{chaptitle}{secno}{sectitle}{ex1,ex2,...}
+% \appendixstring{no}{appendixtitle}                        for Appendix A: AppendixTitle
+% \appendixsecstring{no}{appendixtitle}{secno}{sectitle}    for Appendix A: AppendixTitle, S A.1: SecTitle
+\newcommand{\chapstring}[2]{Chapter #1: #2}
+\newcommand{\secstring}[2]{\S#1 (#2)}
+\newcommand{\pagestring}[1]{p.#1}
+\newcommand{\sidestring}[2]{``#2'' sidebar \pagestring{#1}}
+\newcommand{\exstring}[1]{Ex. \##1}
+\newcommand{\chapsecstring}[4]{\chapstring{#1}{#2} \secstring{#3}{#4}}
+\newcommand{\chapsidestring}[4]{\chapstring{#1}{#2} \sidestring{#3}{#4}}
+\newcommand{\chapexstring}[3]{\chapstring{#1}{#2} \exstring{#3}}
+\newcommand{\chapsecexstring}[5]{\chapsecstring{#1}{#2}{#3}{#4} \exstring{#5}}
+\newcommand{\appendixstring}[2]{Appendix #1: #2}
+\newcommand{\appendixsecstring}[4]{\appendixstring{#1}{#2}, \secstring{#3}{#4}}
+
+% \chaprefstring{chaplabel}
+% \secrefstring{seclabel}
+% \siderefstring{sidelabel}{sidetitle}
+% \exrefstring{ex1,ex2,...}
+% \chapsecrefstring{chaplabel}{seclabel}
+% \chapsiderefstring{chaplabel}{sidelabel}{sidetitle}
+% \chapexrefstring{chaplabel}{ex1,ex2,...}
+% \chapsecexrefstring{chaplabel}{seclabel}{ex1,ex2,...}
+% \appendixrefstring{appendixlabel}
+% \appendixsecrefstring{appendixlabel}{seclabel}
+\newcommand{\chaprefstring}[1]{\chapstring{\ref*{#1}}{\nameref*{#1}}}
+\newcommand{\secrefstring}[1]{\secstring{\ref*{#1}}{\nameref*{#1}}}
+\newcommand{\siderefstring}[2]{\sidestring{\getpagerefnumber{#1}}{#2}}
+\newcommand{\exrefstring}[1]{\exstring{#1}}
+\newcommand{\chapsecrefstring}[2]{\chapsecstring{\ref*{#1}}{\nameref*{#1}}{\ref*{#2}}{\nameref*{#2}}}
+\newcommand{\chapsiderefstring}[3]{\chapsidestring{\ref*{#1}}{\nameref*{#1}}{\getpagerefnumber{#2}}{#3}}
+\newcommand{\chapexrefstring}[2]{\chapexstring{\ref*{#1}}{\nameref*{#1}}{#2}}
+\newcommand{\chapsecexrefstring}[3]{\chapsecexstring{\ref*{#1}}{\nameref*{#1}}{\ref*{#2}}{\nameref*{#2}}{#3}}
+\newcommand{\appendixrefstring}[1]{\appendixstring{\ref*{#1}}{\nameref*{#1}}}
+\newcommand{\appendixsecrefstring}[2]{\appendixsecstring{\ref*{#1}}{\nameref*{#1}}{\ref*{#2}}{\nameref*{#2}}}
+
+%
+% Internal (this document) references
+%
+% \chapref{label}                                   for Chapter 1: ChapTitle
+% \secref{label}                                    for S1.2.3 (SecTitle)
+% \sideref{label}{sidetitle}                        for 'sidetitle' sidebar p.{label}
+% \exref{label1,...}                                for Ex. #1,...
+% \chapsecref{chaplabel}{seclabel}                  for Chapter 1: ChapTitle, S1.2.3 (SecTitle)
+% \chapsideref{chaplabel}{sidebarlabel}{sidetitle}  for Chapter 1: ChapTitle, ``SideTitle'' sidebar p.1
+% \chapexref{chaplabel}{exlabel1,...}               for Chapter 1: ChapTitle, Ex. #1,...
+% \chapsecexref{chaplabel}{seclabel}{exlabel1,...}  for Chapter 1: ChapTitle, S1.2.3 Ex #1,...
+% \labref{label}                                    for Lab 1: LabTitle
+% \appendixref{appendixlabel}                       for Appendix A: Appendix Title
+% \appendixsecref{appendixlabel}{seclabel}          for Appendix A: Appendix Title, SA.1 (SecTitle)
+\newcommand{\chapref}[1]{\hyperref[#1]{\chaprefstring{#1}}}
+\newcommand{\secref}[1]{\hyperref[#1]{\secrefstring{#1}}}
+\newcommand{\sideref}[2]{\hyperref[#2]{\siderefstring{#1}{#2}}}
+\newcommand{\exref}[1]{\exstring{#1}}
+\newcommand{\chapsecref}[2]{\hyperref[#2]{\chapsecrefstring{#1}{#2}}}
+\newcommand{\chapsideref}[3]{\hyperref[#2]{\chapsiderefstring{#1}{#2}{#3}}}
+\newcommand{\chapexref}[2]{\hyperref[#2]{\chapexrefstring{#1}{#2}}}
+\newcommand{\chapsecexref}[3]{\hyperref[#2]{\chapsecexrefstring{#1}{#2}{#3}}}
+\newcommand{\labref}[1]{\hyperref[#1]{Lab \ref*{#1}: \nameref{#1}}}
+\newcommand{\appendixref}[1]{\hyperref[#1]{\appendixrefstring{#1}}}
+\newcommand{\appendixsecref}[2]{\hyperref[#2]{\appendixsecrefstring{#1}{#2}}}
+
+% \link{url}{text}
+% \linkpage{url}{page}{text}
+\newcommand{\link}[2]{\href{#1}{#2}}
+\newcommand{\linkpage}[3]{\href[page=#2]{#1}{#3}}
+
+% for references to local documents in the \docpath folder
+% \docref{bibliography label}
+% \docpageref{bibliography label}{page}{text}
+\newcommand\docref[1]{\pgfkeysifdefined{/variables/#1/title}
+    {\StrSubstitute{#1}{:}{_}[\reffilename]\link{\docpath/\reffilename.pdf}{\getvalue{#1/title}\textsuperscript{\,\dsliterary}}~\cite[]{#1}}
+    {\errmessage{Undefined document reference #1}}}
+\newcommand\docpageref[3]{\pgfkeysifdefined{/variables/#1/title}
+    {\StrSubstitute{#1}{:}{_}[\reffilename]\linkpage{\docpath/\reffilename.pdf}{#2}{#3\textsuperscript{\,\dsliterary}}}
+    {\errmessage{Undefined document reference #1}}}
+
+% for references to external links
+% \linkref{bibliography label}
+\newcommand\linkref[1]{\pgfkeysifdefined{/variables/#1/title}
+    {\link{\getvalue{#1/url}}{\getvalue{#1/title}\textsuperscript{\,$\lhooknearrow$}}~\cite[]{#1}}
+    {\errmessage{Undefined link reference #1}}}
